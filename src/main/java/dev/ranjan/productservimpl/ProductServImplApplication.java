@@ -8,7 +8,9 @@ package dev.ranjan.productservimpl;
 import dev.ranjan.productservimpl.inheritanceDemo.joinedTable.mentorRepository;
 import dev.ranjan.productservimpl.inheritanceDemo.joinedTable.userRepository;
 import dev.ranjan.productservimpl.models.Category;
+import dev.ranjan.productservimpl.models.Price;
 import dev.ranjan.productservimpl.models.Product;
+import dev.ranjan.productservimpl.repository.PriceRepository;
 import dev.ranjan.productservimpl.repository.categoryRepository;
 import dev.ranjan.productservimpl.repository.productRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,17 +24,20 @@ import java.util.UUID;
 public class ProductServImplApplication implements CommandLineRunner {
     private mentorRepository mentorRepository;
     private userRepository userRepository;
-    private final dev.ranjan.productservimpl.repository.productRepository productRepository;
-    private final dev.ranjan.productservimpl.repository.categoryRepository categoryRepository;
+    private final productRepository productRepository;
+    private final categoryRepository categoryRepository;
+    private final PriceRepository priceRepository;
 
     public ProductServImplApplication(@Qualifier("jt_mr") mentorRepository mentorRepository,
                                       @Qualifier("jt_ur")userRepository userRepository,
                                       productRepository productRepository,
-                                      categoryRepository categoryRepository) {
+                                      categoryRepository categoryRepository,
+                                      PriceRepository priceRepository) {
         this.mentorRepository = mentorRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.priceRepository = priceRepository;
     }
 
     public static void main(String[] args) {
@@ -57,18 +62,23 @@ public class ProductServImplApplication implements CommandLineRunner {
 //        }
         Category category = new Category();
         category.setName("Apple Devices");
-        Category savedCategory = categoryRepository.save(category);
+        //Category savedCategory = categoryRepository.save(category);
+
+        Price price = new Price("Rupee", 10);
+        //Price savedPrice = priceRepository.save(price);
 
         Product product = new Product();
         product.setTitle("iPhone 15 Pro");
         product.setDescription("The best iPhone Ever");
-        product.setCategory(savedCategory);
+        product.setCategory(category);
+        product.setPrice(price);
 
         productRepository.save(product);
+        productRepository.deleteById(UUID.fromString("7a1615e7-5744-414b-b9fe-77f13a46069e"));
 
-        Category category1 = categoryRepository.findById(UUID.fromString("767a30b0-484d-4834-8b1c-8c0c47f903de")).get();
-        System.out.println("Category name is: " + category1.getName());
-        System.out.println("Printing all products in the category");
-        Thread.sleep(1000);
+        //Category category1 = categoryRepository.findById(UUID.fromString("767a30b0-484d-4834-8b1c-8c0c47f903de")).get();
+        //System.out.println("Category name is: " + category1.getName());
+        //System.out.println("Printing all products in the category");
+        //Thread.sleep(1000);
     }
 }
